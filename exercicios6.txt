@@ -1,0 +1,21 @@
+Exercícios 6:
+
+6.1 - Nesse tipo de sistema, o semáforo mutex é usado para garantir que apenas uma thread por vez possa acessar ou modificar recursos críticos, 
+como a fila de clientes esperando. Se esse semáforo for removido, várias threads clientes podem acessar essa fila ao mesmo tempo, gerando o que 
+chamamos de condição de corrida. Isso significa que dois clientes podem sentar na mesma cadeira, ou que o barbeiro pode atender alguém que, na 
+verdade, já saiu ou nem estava lá. Na prática, o sistema se torna inconsistente: o barbeiro pode ficar dormindo mesmo com clientes na fila, ou 
+atender clientes que não existem. Portanto, o semáforo mutex é essencial para evitar corrupção nos dados e garantir o comportamento correto da 
+barbearia.
+
+6.2 - A discussão gira em torno do Jantar dos Filósofos, outro problema clássico que trata de sincronização e deadlock. Se permitirmos que um 
+filósofo pegue o primeiro garfo e depois apenas verifique se o segundo está livre, sem bloqueá-lo de fato, podemos cair em um impasse. Imagine 
+todos os filósofos fazendo isso ao mesmo tempo: cada um segura um garfo e fica esperando pelo segundo, que já está nas mãos de seu vizinho. 
+Como ninguém libera o que já pegou, todos ficam esperando para sempre — o que caracteriza um deadlock. O erro aqui é permitir que o filósofo 
+egure um recurso sem ter certeza de que conseguirá o outro. Isso precisa ser evitado com alguma forma de ordenação, como forçar um dos filósofos 
+a pegar os garfos em ordem inversa, ou garantindo que ele só tente pegar os dois se ambos estiverem disponíveis ao mesmo tempo.
+
+6.3 - Quando temos várias threads consumidoras esperando por itens, usar notify() faz com que apenas uma delas seja acordada. A thread que for 
+acordada vai verificar a fila, e, se não puder continuar, volta a esperar. No entanto, o agendador da JVM pode sempre escolher a mesma thread 
+para acordar — e isso pode causar starvation, ou seja, outras threads ficam eternamente esperando sem nunca terem a chance de executar. A melhor 
+prática, nesses casos, é usar notifyAll(), que acorda todas as threads consumidoras. Cada uma verifica se a condição de prosseguir está satisfeita, 
+e apenas uma delas continua; as outras voltam a esperar. Isso garante justiça entre as threads e evita que alguma fique esquecida.
